@@ -13,4 +13,4 @@ async def getHello(request: Request):
     data = json.loads(body) 
     name = data.get("name") 
     
-    return {"message": f"Hello, {name}!"}
+    return {f"Hello, {name}!"}
