@@ -1,0 +1,43 @@
+name: Deploy Web UI
+
+on:
+  push:
+    branches:
+      - main
+  paths:
+      - "frontend/**"
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout only assignment_16
+        run: |
+          git init
+          git remote add origin https://github.com/${{ github.repository }}
+          git config core.sparseCheckout true
+          echo "assignment_16" >> .git/info/sparse-checkout
+          git fetch --depth 1 origin ${{ github.ref }}
+          git checkout ${{ github.ref }}
+
+      - name: Docker hub login
+        run: echo "${{ secrets.DOCKER_KEY }}" | docker login -u "${{ secrets.DOCKER_NAME }}" --password-stdin
+
+      - name: create docker image
+        run: |
+          cd assignment_16
+          docker build -t ${{ secrets.DOCKER_NAME }}/web_UI:latest .
+
+      - name: Push docker image
+        run: |
+          docker push mydockerhubusername/frontend:latest
+
+      
+
+
+
+
+
+
+     
