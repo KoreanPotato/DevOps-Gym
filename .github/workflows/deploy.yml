@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - "frontend/**"
+      - "assignment_16/**"
 
 jobs:
   build-and-deploy:
