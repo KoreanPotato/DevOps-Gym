@@ -28,6 +28,13 @@ jobs:
       - name: Docker hub login
         run: echo "${{ secrets.DOCKER_KEY }}" | docker login -u "${{ secrets.DOCKER_NAME }}" --password-stdin
 
+      - name: Debug working directory
+        run: |
+          pwd
+          ls -lah
+          ls -lah assignment_16
+
+
       - name: create docker image
         run: |
           pwd
