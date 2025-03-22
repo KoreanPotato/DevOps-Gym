@@ -48,33 +48,15 @@ jobs:
           ls -lah
           ls -lah assignment_16
 
-      # ✅ Новый шаг — включаем QEMU
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+      - name: Build Docker image
+        run: |
+          docker buildx build \
+          -t ${{ secrets.DOCKER_NAME }}/web_ui:latest \
+          -f ./assignment_16/frontend/Dockerfile ./assignment_16/frontend
 
-      # ✅ Новый шаг — активируем buildx
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      # ✅ Новый шаг — билд и пуш ARM64-образа
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v4
-        with:
-          context: ./assignment_16/frontend
-          file: ./assignment_16/frontend/Dockerfile
-          platforms: linux/arm64
-          push: true
-          tags: ${{ secrets.DOCKER_NAME }}/web_ui:latest
-          
-      # - name: Build Docker image
-      #   run: |
-      #     docker buildx build \
-      #     -t ${{ secrets.DOCKER_NAME }}/web_ui:latest \
-      #     -f ./assignment_16/frontend/Dockerfile ./assignment_16/frontend
-
-      # - name: Push docker image
-      #   run: |
-      #     docker push nekoreec/web_ui:latest
+      - name: Push docker image
+        run: |
+          docker push nekoreec/web_ui:latest
 
       - name: Deploy with Ansible
         run: |
