@@ -7,7 +7,7 @@ COPY package*.json ./
 RUN npm install
 
 COPY . .
-RUN npm install || (echo "==== NPM INSTALL FAILED ====" && cat /root/.npm/_logs/* || true)
+RUN npm install 
 
 FROM nginx:alpine
 COPY --from=build /app/build /usr/share/nginx/html
