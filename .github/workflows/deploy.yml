@@ -33,7 +33,7 @@ jobs:
           pwd
           ls -l
           cd assignment_16
-          docker buildx build -t ${{ secrets.DOCKER_NAME }}/web_ui:latest -f assignment_16/frontend/Dockerfile assignment_16
+          docker buildx build -t ${{ secrets.DOCKER_NAME }}/web_ui:latest -f ./assignment_16/frontend/Dockerfile ./assignment_16/frontend
 
 
       - name: Push docker image
