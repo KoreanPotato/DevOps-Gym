@@ -37,7 +37,7 @@ function App() {
                     className="input"
                     placeholder="Your name"
                 />
-                <span className="label">Enter nnnname</span>
+                <span className="label">Enter name</span>
             </div>
 
             <button className="button" onClick={sendRequest}>Submit</button>
