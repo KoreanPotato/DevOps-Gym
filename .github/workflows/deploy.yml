@@ -20,19 +20,17 @@ jobs:
           git config core.sparseCheckout true
           echo "assignment_16" >> .git/info/sparse-checkout
           git fetch origin
-          git branch -r
           git checkout -b main origin/main
-      
 
       - name: Install Tailscale
         run: |
           curl -fsSL https://tailscale.com/install.sh | sh
           sudo tailscale up --authkey=${{ secrets.TAILSCALE_AUTHKEY }}
 
-      - name: install Ansible
+      - name: Install Ansible
         run: sudo apt update && sudo apt install -y ansible
 
-      - name: SSH-key setup
+      - name: SSH key setup
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa 
@@ -42,36 +40,28 @@ jobs:
       - name: Docker hub login
         run: echo "${{ secrets.DOCKER_KEY }}" | docker login -u "${{ secrets.DOCKER_NAME }}" --password-stdin
 
-      - name: Debug working directory
-        run: |
-          pwd
-          ls -lah
-          ls -lah assignment_16
+      # ✅ Новый шаг — включаем QEMU
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
 
-      - name: Build Docker image
-        run: |
-          docker buildx build \
-          -t ${{ secrets.DOCKER_NAME }}/web_ui:latest \
-          -f ./assignment_16/frontend/Dockerfile ./assignment_16/frontend
+      # ✅ Новый шаг — активируем buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-      - name: Push docker image
-        run: |
-          docker push nekoreec/web_ui:latest
+      # ✅ Новый шаг — билд и пуш ARM64-образа
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./assignment_16/frontend
+          file: ./assignment_16/frontend/Dockerfile
+          platforms: linux/arm64
+          push: true
+          tags: ${{ secrets.DOCKER_NAME }}/web_ui:latest
 
       - name: Deploy with Ansible
         run: |
-            cd assignment_16/frontend
-            ansible-playbook deploy_frontend.yml \
+          cd assignment_16/frontend
+          ansible-playbook deploy_frontend.yml \
             -i "${{ secrets.SERVER_IP }}," \
             --user ${{ secrets.SSH_USER }} \
             --extra-vars "docker_username=${{ secrets.DOCKER_NAME }} docker_password=${{ secrets.DOCKER_KEY }}"
-    
-
-      
-
-
-
-
-
-
-     
