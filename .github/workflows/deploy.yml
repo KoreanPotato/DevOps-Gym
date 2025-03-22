@@ -59,11 +59,10 @@ jobs:
           docker buildx build \
           --platform linux/arm64 \
           -t ${{ secrets.DOCKER_NAME }}/web_ui:latest \
-          -f ./assignment_16/frontend/Dockerfile ./assignment_16/frontend
+          -f ./assignment_16/frontend/Dockerfile ./assignment_16/frontend \
+          --push
 
-      - name: Push docker image
-        run: |
-          docker push nekoreec/web_ui:latest
+    
 
       - name: Deploy with Ansible
         run: |
@@ -72,13 +71,3 @@ jobs:
             -i "${{ secrets.SERVER_IP }}," \
             --user ${{ secrets.SSH_USER }} \
             --extra-vars "docker_username=${{ secrets.DOCKER_NAME }} docker_password=${{ secrets.DOCKER_KEY }}"
-    
-
-      
-
-
-
-
-
-
-     
