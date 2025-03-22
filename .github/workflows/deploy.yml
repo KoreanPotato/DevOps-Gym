@@ -22,8 +22,22 @@ jobs:
           git fetch origin
           git branch -r
           git checkout -b main origin/main
+      
 
+      - name: Install Tailscale
+        run: |
+          curl -fsSL https://tailscale.com/install.sh | sh
+          sudo tailscale up --authkey=${{ secrets.TAILSCALE_AUTHKEY }}
 
+      - name: install Ansible
+        run: sudo apt update && sudo apt install -y ansible
+
+      - name: SSH-key setup
+        run: |
+          sudo mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          sudo chmod 600 ~/.ssh/id_rsa
+          sudo ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
 
       - name: Docker hub login
         run: echo "${{ secrets.DOCKER_KEY }}" | docker login -u "${{ secrets.DOCKER_NAME }}" --password-stdin
@@ -34,7 +48,6 @@ jobs:
           ls -lah
           ls -lah assignment_16
 
-
       - name: Build Docker image
         run: |
           docker buildx build --platform linux/amd64 \
@@ -44,6 +57,14 @@ jobs:
       - name: Push docker image
         run: |
           docker push nekoreec/web_ui:latest
+
+      - name: Deploy with Ansible
+        run: |
+          ansible-playbook cd assignment_16/frontend/deploy_frontend.yml \
+            -i "${{ secrets.SERVER_IP }}," \
+            --user ${{ secrets.SSH_USER }} \
+            --extra-vars "docker_username=${{ secrets.DOCKER_NAME }} docker_password=${{ secrets.DOCKER_KEY }}"
+    
 
       
 

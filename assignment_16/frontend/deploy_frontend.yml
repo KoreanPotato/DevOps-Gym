@@ -1,0 +1,38 @@
+- name: Docker_deploy
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+
+    - name: Docker hub login
+      docker_login:
+        username: "{{ docker_username }}"
+        password: "{{ docker_password }}"
+      when: docker_username is defined and docker_password is defined
+
+
+    - name: Скачать образ фронта
+      docker_image:
+        name: "{{ docker_username }}/web_ui"
+        tag: latest
+        source: pull
+
+    - name: Удалить старый контейнер (если был)
+      docker_container:
+        name: frontend
+        state: absent
+        force_kill: true
+
+    
+    - name: Запустить контейнер
+      docker_container:
+        name: frontend
+        image: "{{ docker_username }}/web_ui:latest"
+        state: started
+        restart_policy: always
+        ports:
+          - "80:80"
