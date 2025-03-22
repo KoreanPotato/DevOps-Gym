@@ -19,6 +19,7 @@ jobs:
           git config core.sparseCheckout true
           echo "assignment_16" >> .git/info/sparse-checkout
           git fetch origin
+          git branch -r
           git checkout -b main origin/main
 
 
