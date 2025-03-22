@@ -30,7 +30,7 @@ jobs:
       - name: create docker image
         run: |
           cd assignment_16
-          docker build -t ${{ secrets.DOCKER_NAME }}/web_UI:latest .
+          docker build -t ${{ secrets.DOCKER_NAME }}/web_ui:latest .
 
       - name: Push docker image
         run: |
