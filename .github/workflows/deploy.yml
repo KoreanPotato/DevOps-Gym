@@ -34,10 +34,10 @@ jobs:
 
       - name: SSH-key setup
         run: |
-          sudo mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          sudo chmod 600 ~/.ssh/id_rsa
-          sudo ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa 
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
 
       - name: Docker hub login
         run: echo "${{ secrets.DOCKER_KEY }}" | docker login -u "${{ secrets.DOCKER_NAME }}" --password-stdin
