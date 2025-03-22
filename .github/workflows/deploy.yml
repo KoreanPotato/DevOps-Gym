@@ -43,7 +43,7 @@ jobs:
 
       - name: Push docker image
         run: |
-          docker push mydockerhubusername/frontend:latest
+          docker push nekoreec/web_ui:latest
 
       
 
