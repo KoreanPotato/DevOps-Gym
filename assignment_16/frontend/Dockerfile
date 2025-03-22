@@ -3,7 +3,7 @@ FROM node:18 AS build
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install --legacy-peer-deps || (cat /root/.npm/_logs/* || true)
+RUN npm install --legacy-peer-deps --verbose
 
 COPY . .
 RUN npm run build
