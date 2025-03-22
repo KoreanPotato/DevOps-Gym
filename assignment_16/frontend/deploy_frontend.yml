@@ -15,20 +15,20 @@
       when: docker_username is defined and docker_password is defined
 
 
-    - name: Скачать образ фронта
+    - name: pull docker image
       docker_image:
         name: "{{ docker_username }}/web_ui"
         tag: latest
         source: pull
 
-    - name: Удалить старый контейнер (если был)
+    - name: delete image if eixists
       docker_container:
         name: frontend
         state: absent
         force_kill: true
 
     
-    - name: Запустить контейнер
+    - name: run container
       docker_container:
         name: frontend
         image: "{{ docker_username }}/web_ui:latest"
