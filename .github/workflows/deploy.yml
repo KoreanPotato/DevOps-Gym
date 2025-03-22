@@ -51,7 +51,7 @@ jobs:
       - name: Build Docker image
         run: |
           docker buildx build \
-           --platform linux/amd64 \
+           --platform linux/arm64 \
             -t ${{ secrets.DOCKER_NAME }}/web_ui:latest \
             -f ./assignment_16/frontend/Dockerfile ./assignment_16/frontend
 
