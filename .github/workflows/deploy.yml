@@ -18,8 +18,9 @@ jobs:
           git remote add origin https://github.com/${{ github.repository }}
           git config core.sparseCheckout true
           echo "assignment_16" >> .git/info/sparse-checkout
-          git fetch --depth 1 origin ${{ github.ref }}
-          git checkout ${{ github.ref }}
+          git fetch --depth 1 origin
+          git checkout origin/main
+
 
       - name: Docker hub login
         run: echo "${{ secrets.DOCKER_KEY }}" | docker login -u "${{ secrets.DOCKER_NAME }}" --password-stdin
