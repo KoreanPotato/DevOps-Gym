@@ -1,10 +1,9 @@
-FROM node:18-alpine AS build
+FROM node:18-slim AS build
 
 WORKDIR /app
 
 COPY package*.json ./
-
-RUN npm install
+RUN npm install --legacy-peer-deps || (cat /root/.npm/_logs/* || true)
 
 COPY . .
 RUN npm run build
