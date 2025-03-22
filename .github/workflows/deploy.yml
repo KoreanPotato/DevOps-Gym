@@ -60,7 +60,8 @@ jobs:
 
       - name: Deploy with Ansible
         run: |
-          ansible-playbook cd assignment_16/frontend/deploy_frontend.yml \
+            cd assignment_16/frontend
+            ansible-playbook deploy_frontend.yml \
             -i "${{ secrets.SERVER_IP }}," \
             --user ${{ secrets.SSH_USER }} \
             --extra-vars "docker_username=${{ secrets.DOCKER_NAME }} docker_password=${{ secrets.DOCKER_KEY }}"
